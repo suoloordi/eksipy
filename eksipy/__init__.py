@@ -123,6 +123,8 @@ class Eksi:
         entrys = topic.find("#entry-item-list", first=True).find("li")
         giriler = []
         for entry in entrys:
+            duzenleme, tarih = self.convertToDate(entry.find(
+                "footer > div.info > div.entry-footer-bottom > div.footer-info > div > a.entry-date", first=True).text)
             giriler.append(
                 Entry(
                     self,
@@ -132,8 +134,8 @@ class Eksi:
                         id=entry.attrs['data-author-id'], nick=entry.attrs['data-author']),
                     entry=entry.pq(".content"),
                     topic=baslik,
-                    date="",
-                    edited=False,
+                    date=tarih,
+                    edited=duzenleme,
                     fav_count=entry.attrs['data-favorite-count'],
                     comment=entry.attrs['data-comment-count'],
                 )
@@ -153,7 +155,7 @@ class Eksi:
         topic = topic.html.find("#topic", first=True)
         entry = topic.find("#entry-item-list", first=True).find("li")[0]
         tarih = entry.find(
-            "footer > div.info > a.entry-date.permalink", first=True).text
+            "footer > div.info > div.entry-footer-bottom > div.footer-info > div > a.entry-date", first=True).text
         duzenleme, tarih = self.convertToDate(tarih)
         return Entry(
             self,
