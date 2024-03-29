@@ -28,6 +28,7 @@ from time import mktime
 import os
 from eksipy.models import *
 from typing import Union, List
+import pytz
 
 
 class Eksi:
@@ -170,37 +171,42 @@ class Eksi:
             comment=entry.attrs['data-comment-count'],
         )
 
-    def convertToDate(self, date: str) -> str:
+
+    def convertToDate(self, date: str) -> tuple:
         """
-        Ekşi Sözlük zamanını unix time çevirir.
+        Converts Ekşi Sözlük time to Unix time.
+
+        Args:
+            date (str): The date string in Ekşi Sözlük format.
+
+        Returns:
+            tuple: A tuple containing the edit time (Unix timestamp) and the creation time (Unix timestamp).
         """
+
+        # Set the timezone to Turkey
+        tz = pytz.timezone('Europe/Istanbul')
 
         if '~' in date:
             parcalama = date.split('~')
             parcalama[0] = parcalama[0].strip()
             parcalama[1] = parcalama[1].strip()
 
-            tarih = round(
-                mktime(datetime.strptime(
-                       parcalama[0], "%d.%m.%Y %H:%M" if ':' in parcalama[0] else "%d.%m.%Y").timetuple())
-            )
+            creation_date = tz.localize(datetime.strptime(parcalama[0], "%d.%m.%Y %H:%M" if ':' in parcalama[0] else "%d.%m.%Y"))
+            creation_time = creation_date.timestamp()
 
             if '.' in parcalama[1]:
-                duzenleme = round(
-                    mktime(datetime.strptime(
-                        parcalama[1], "%d.%m.%Y %H:%M" if ':' in parcalama[1] else "%d.%m.%Y").timetuple())
-                )
+                edit_date = tz.localize(datetime.strptime(parcalama[1], "%d.%m.%Y %H:%M" if ':' in parcalama[1] else "%d.%m.%Y"))
+                edit_time = edit_date.timestamp()
             else:
-                duzenleme = round(
-                    mktime(datetime.strptime(
-                        f"{parcalama[0].split(' ')[0]} {parcalama[1]}", "%d.%m.%Y %H:%M").timetuple())
-                )
+                edit_time_str = f"{parcalama[0].split(' ')[0]} {parcalama[1]}"
+                edit_date = tz.localize(datetime.strptime(edit_time_str, "%d.%m.%Y %H:%M"))
+                edit_time = edit_date.timestamp()
         else:
-            duzenleme = False
-            tarih = mktime(datetime.strptime(
-                date, "%d.%m.%Y %H:%M" if ':' in date else "%d.%m.%Y").timetuple())
-        return duzenleme, tarih
+            creation_date = tz.localize(datetime.strptime(date, "%d.%m.%Y %H:%M" if ':' in date else "%d.%m.%Y"))
+            creation_time = creation_date.timestamp()
+            edit_time = False
 
+    return edit_time, creation_time
     async def gundem(self, page=1) -> List[Topic]:
         """
         Gündem feedini çeker
