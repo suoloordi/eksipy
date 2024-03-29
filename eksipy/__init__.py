@@ -206,7 +206,8 @@ class Eksi:
             creation_time = creation_date.timestamp()
             edit_time = False
 
-    return edit_time, creation_time
+        return edit_time, creation_time
+        
     async def gundem(self, page=1) -> List[Topic]:
         """
         Gündem feedini çeker
