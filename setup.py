@@ -1,7 +1,7 @@
 from setuptools import setup
 import sys
 
-required = ['requests-html', 'requests']
+required = ['requests-html', 'requests', 'pytz']
 long_description = ""
 with open('README.md') as f:
     long_description += f.read()
