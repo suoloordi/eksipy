@@ -48,8 +48,18 @@ class Eksi:
         self.config = config
         self.eksi = self.config["EKSI_URL"]
         self.user_agent = user_agent
-        cf_clearance_cookie = 'nsuA3nQ6KITa7ZFR07tJwHhUQhIH8Eo27trTcJRSe2o-1712419558-1.0.1.1-1iFOsEqvQnhS__QQZWt7jx0jIMSbUp9LBWqxZKxwWH6nZxg91R3y3A99CLAeHrmYQvNy_ZZDy8_07EbHaVX5gg'
-        self.session.cookies.set('cf_clearance', cf_clearance_cookie)
+        cookies = {
+            'channel-filter-preference-cookie': 'W3siSWQiOjEsIlByZWYiOnRydWV9LHsiSWQiOjIsIlByZWYiOnRydWV9LHsiSWQiOjQsIlByZWYiOnRydWV9LHsiSWQiOjUsIlByZWYiOnRydWV9LHsiSWQiOjEwLCJQcmVmIjpmYWxzZX0seyJJZCI6MTEsIlByZWYiOmZhbHNlfV0=',
+            'app-suggestion': '1',
+            'notheme': '1',
+            '__RequestVerificationToken': 'LBnt6F8idkaAzx9yQUldrwqFZlMoToxEfZp2PPdSr4VOqk3uts2YWR7WnfvgFhxPxklduENSlHqxGGSWEIakT8-hzpVZj4I_3XU1gkukkgw1',
+            'a': 'V+doTEb5lze/NSxGRdAj1NWiHVvZOsKShaq3O2S/K3fT38HmzSeA4CkcFv0BNOF0i4z4WwGjP6XLgqfJSrKOAzF0t+IPQLlANJDC1NpvZHPEhDFDD/DW1Tg2vu8bDDO34CXSWJhUGakaQHfOOEXh+Sat/ouTLGKXhMZg3DSuQhk=',
+            'led_msg': '1',
+            'led_tra': '',
+            'led_evt': '1',
+            'cf_clearance': 'nsuA3nQ6KITa7ZFR07tJwHhUQhIH8Eo27trTcJRSe2o-1712419558-1.0.1.1-1iFOsEqvQnhS__QQZWt7jx0jIMSbUp9LBWqxZKxwWH6nZxg91R3y3A99CLAeHrmYQvNy_ZZDy8_07EbHaVX5gg',
+        }
+        self.session.cookies.set(**cookies)
 
     def addParamsToUrl(self, url: str, params: dict) -> str:
         """
