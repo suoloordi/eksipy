@@ -48,6 +48,8 @@ class Eksi:
         self.config = config
         self.eksi = self.config["EKSI_URL"]
         self.user_agent = user_agent
+        cf_clearance_cookie = 'nsuA3nQ6KITa7ZFR07tJwHhUQhIH8Eo27trTcJRSe2o-1712419558-1.0.1.1-1iFOsEqvQnhS__QQZWt7jx0jIMSbUp9LBWqxZKxwWH6nZxg91R3y3A99CLAeHrmYQvNy_ZZDy8_07EbHaVX5gg'
+        self.session.cookies.set('cf_clearance', cf_clearance_cookie)
 
     def addParamsToUrl(self, url: str, params: dict) -> str:
         """
