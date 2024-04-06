@@ -289,7 +289,7 @@ class Eksi:
                                                "ReturnUrl": "https%3A%2F%2Feksisozluk.com%2F"
                                            },
                                            headers={
-                                               'User-Agent': "PostmanRuntime/7.26.10",
+                                               'User-Agent': self.user_agent,
                                                'Content-Type': 'application/x-www-form-urlencoded',
                                            }
                                            )
