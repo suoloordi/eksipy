@@ -59,7 +59,8 @@ class Eksi:
             'led_evt': '1',
             'cf_clearance': 'nsuA3nQ6KITa7ZFR07tJwHhUQhIH8Eo27trTcJRSe2o-1712419558-1.0.1.1-1iFOsEqvQnhS__QQZWt7jx0jIMSbUp9LBWqxZKxwWH6nZxg91R3y3A99CLAeHrmYQvNy_ZZDy8_07EbHaVX5gg',
         }
-        self.session.cookies.set(**cookies)
+        for name, value in cookies.items():
+            self.session.cookies.set(name, value)
 
     def addParamsToUrl(self, url: str, params: dict) -> str:
         """
