@@ -8,7 +8,7 @@ with open('README.md') as f:
 
 setup(
     name='eksipy',
-    version='2.0.5',
+    version='2.0.6',
     description='Unofficial API for Eksi Sozluk.',
     long_description=long_description,
     author='Yusuf Usta',
