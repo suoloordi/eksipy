@@ -32,20 +32,22 @@ import pytz
 
 
 class Eksi:
-    def __init__(self, session: AsyncHTMLSession = None, config={"EKSI_URL": "https://eksisozluk.com/"}):
+    def __init__(self, session: AsyncHTMLSession = None, config={"EKSI_URL": "https://eksisozluk.com/"},
+                 user_agent="Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:124.0) Gecko/20100101 Firefox/124.0"):
         """
         Sınıfı başlatır.
         """
 
         if session == None:
-            self.session = AsyncHTMLSession()
+            self.session = AsyncHTMLSession(mock_browser=False)
         else:
             if isinstance(session, AsyncHTMLSession):
                 self.session = session
             else:
-                self.session = AsyncHTMLSession()
+                self.session = AsyncHTMLSession(mock_browser=False)
         self.config = config
         self.eksi = self.config["EKSI_URL"]
+        self.user_agent = user_agent
 
     def addParamsToUrl(self, url: str, params: dict) -> str:
         """
@@ -62,7 +64,7 @@ class Eksi:
         """
 
         bugun = await self.session.get(
-            f'{self.eksi}basliklar/bugun/{page}&_=0'
+            f'{self.eksi}basliklar/bugun/{page}&_=0', headers={'user-agent':self.user_agent}
         )
 
         topics = bugun.html.find(
@@ -98,7 +100,7 @@ class Eksi:
         Yazdığınız kelimeleri başlığa çevirir.
         """
 
-        istek = await self.session.get(self.eksi + "?q=" + title)
+        istek = await self.session.get(self.eksi + "?q=" + title, headers={'user-agent':self.user_agent})
         if istek.status_code != 404:
             return istek.url
         else:
@@ -117,7 +119,7 @@ class Eksi:
             url = self.addParamsToUrl(url, {"a": sukela})
 
         topic = await self.session.get(
-            url
+            url, headers={'user-agent':self.user_agent}
         )
 
         topic = topic.html.find("#topic", first=True)
@@ -150,7 +152,7 @@ class Eksi:
 
         url = self.eksi + "entry/" + str(entry)
         topic = await self.session.get(
-            url
+            url, headers={'user-agent':self.user_agent}
         )
 
         topic = topic.html.find("#topic", first=True)
@@ -214,7 +216,7 @@ class Eksi:
         """
 
         gundem = await self.session.get(
-            f'{self.eksi}basliklar/gundem?p={page}'
+            f'{self.eksi}basliklar/gundem?p={page}', headers={'user-agent':self.user_agent}
         )
 
         topics = gundem.html.find(
@@ -251,7 +253,7 @@ class Eksi:
         """
 
         gundem = await self.session.get(
-            f'{self.eksi}/debe'
+            f'{self.eksi}/debe', headers={'user-agent':self.user_agent}
         )
 
         topics = gundem.html.find(
@@ -274,9 +276,7 @@ class Eksi:
         Ekşi Sözlüğe giriş yapar.
         """
 
-        giris = await self.session.get(f"{self.eksi}giris", headers={
-            'User-Agent': "PostmanRuntime/7.26.10"
-        })
+        giris = await self.session.get(f"{self.eksi}giris", headers={'user-agent':self.user_agent})
         rvt = giris.html.find(
             'input[name="__RequestVerificationToken"]', first=True).attrs['value']
         login = await self.session.request("POST",
@@ -346,7 +346,7 @@ class Eksi:
         Entry gönderir.
         """
 
-        page = await self.session.get(await topic.getUrl())
+        page = await self.session.get(await topic.getUrl(), headers={'user-agent':self.user_agent})
 
         ReqVerTok = page.html.find(
             'input[name="__RequestVerificationToken"]', first=True).attrs['value']
@@ -368,7 +368,7 @@ class Eksi:
                                                'InputStartTime': InputStartTime,
                                                'AddAsHidden': 'true' if hidden else 'false'
                                            },
-                                           headers={"user-agent": "PostmanRuntime/7.26.10",
+                                           headers={"User-Agent": "PostmanRuntime/7.26.10",
                                                     "content-type": "application/x-www-form-urlencoded"},
                                            allow_redirects=False
                                            )
@@ -476,7 +476,8 @@ class Eksi:
         istek = await self.session.get(
             f'{self.eksi}autocomplete/query?q={text}&_=0',
             headers={
-                'x-requested-with': 'XMLHttpRequest'
+                'x-requested-with': 'XMLHttpRequest',
+                'user-agent':self.user_agent
             }
         )
         return istek.json()
@@ -525,7 +526,7 @@ class Eksi:
 
     async def isLogged(self):
         homepage = await self.session.get(
-            self.eksi
+            self.eksi, headers={'user-agent':self.user_agent}
         )
 
         try:
