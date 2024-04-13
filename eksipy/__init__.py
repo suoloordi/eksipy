@@ -115,7 +115,8 @@ class Eksi:
 
         istek = await self.session.get(self.eksi + "?q=" + title, headers={'user-agent':self.user_agent})
         if istek.status_code != 404:
-            return istek.url
+            final_url = istek.headers['Zr-Final-Url']
+            return final_url
         else:
             return False
 
