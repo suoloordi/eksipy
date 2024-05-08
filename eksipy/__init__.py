@@ -119,7 +119,7 @@ class Eksi:
             final_url = istek.headers['Location']
             return final_url
         if istek.status_code != 404:
-            final_url = istek.headers['Zr-Final-Url']
+            final_url = istek.headers.get('Zr-Final-Url') or istek.url
             return final_url
         else:
             return False
