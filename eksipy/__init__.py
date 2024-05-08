@@ -114,6 +114,7 @@ class Eksi:
         """
 
         istek = await self.session.get(self.eksi + "?q=" + title, headers={'user-agent':self.user_agent})
+        print(istek.headers)
         if 300 < istek.status_code < 399:
             final_url = istek.headers['Location']
             return final_url
